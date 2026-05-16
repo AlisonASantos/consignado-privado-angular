@@ -1,0 +1,72 @@
+.page-layout {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar {
+  background: #1A237E !important;
+  color: white;
+  .toolbar-logo { margin-right: 8px; }
+}
+
+.page-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  background: #fafafa;
+  h2 { margin: 0 0 4px; font-size: 22px; font-weight: 700; color: #1A237E; }
+  .subtitle { margin: 0 0 24px; color: #666; font-size: 14px; }
+}
+
+.step-card {
+  margin: 8px 0 16px;
+}
+
+.step-info {
+  margin-bottom: 16px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  span { color: #666; }
+  strong { color: #333; }
+  .status-created { color: #1A237E; }
+}
+
+.step-desc {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.approval-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #E8F5E9;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+  mat-icon { color: #4CAF50; font-size: 32px; width: 32px; height: 32px; }
+  strong { color: #2E7D32; }
+  span { color: #666; font-size: 13px; }
+}
+
+.pix-button {
+  width: 100%;
+  height: 48px;
+  margin-top: 16px;
+}
+
+.celebration {
+  text-align: center;
+  padding: 32px;
+  .celebration-icon { font-size: 64px; width: 64px; height: 64px; color: #FF9800; }
+  h3 { color: #2E7D32; font-size: 20px; }
+  p { color: #666; }
+  .event-tag { color: #1A237E; font-weight: 600; font-size: 12px; background: #E8EAF6; display: inline-block; padding: 4px 12px; border-radius: 12px; margin-bottom: 16px; }
+}

@@ -1,0 +1,88 @@
+<div class="dashboard-layout">
+  <mat-toolbar class="toolbar" color="primary">
+    <mat-icon class="toolbar-logo">account_balance</mat-icon>
+    <span class="toolbar-title">Consignado Privado</span>
+    <span class="spacer"></span>
+    <button mat-icon-button><mat-icon matBadge="3" matBadgeColor="warn">notifications</mat-icon></button>
+    <div class="avatar">A</div>
+  </mat-toolbar>
+
+  <div class="content-area">
+    <nav class="sidenav">
+      @for (item of navItems; track item.label; let i = $index) {
+        <button class="nav-item" [class.active]="selectedIndex === i" (click)="navigateTo(item.route, i)">
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </button>
+      }
+    </nav>
+
+    <main class="main-content">
+      <h2>Dashboard Operacional</h2>
+      <p class="subtitle">Visão geral da plataforma</p>
+
+      <div class="kpi-grid">
+        @for (kpi of kpis; track kpi.label) {
+          <mat-card class="kpi-card">
+            <div class="kpi-header">
+              <mat-icon [style.color]="kpi.color">{{ kpi.icon }}</mat-icon>
+              <span class="kpi-trend" [class.up]="kpi.trendUp" [class.down]="!kpi.trendUp">{{ kpi.trend }}</span>
+            </div>
+            <div class="kpi-value">{{ kpi.value }}</div>
+            <div class="kpi-label">{{ kpi.label }}</div>
+          </mat-card>
+        }
+      </div>
+
+      <div class="info-grid">
+        <mat-card class="info-card">
+          <mat-card-header><mat-card-title>Propostas Recentes</mat-card-title></mat-card-header>
+          <mat-card-content>
+            <mat-list>
+              @for (p of recentProposals; track p.name) {
+                <mat-list-item>
+                  <mat-icon matListItemIcon class="proposal-avatar">account_circle</mat-icon>
+                  <div matListItemTitle>{{ p.name }}</div>
+                  <div matListItemLine>{{ p.amount }}</div>
+                  <span class="status-chip" [style.background]="p.statusColor">{{ p.status }}</span>
+                </mat-list-item>
+              }
+            </mat-list>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="info-card">
+          <mat-card-header><mat-card-title>Distribuição por Status</mat-card-title></mat-card-header>
+          <mat-card-content>
+            @for (s of statusDistribution; track s.label) {
+              <div class="status-row">
+                <span class="status-label">{{ s.label }}</span>
+                <mat-progress-bar mode="determinate" [value]="s.value" [style.--mdc-linear-progress-active-indicator-color]="s.color"></mat-progress-bar>
+                <span class="status-value" [style.color]="s.color">{{ s.value }}</span>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <mat-card class="flow-card">
+        <mat-card-header><mat-card-title>Macro Fluxo Operacional</mat-card-title></mat-card-header>
+        <mat-card-content>
+          <div class="flow-steps">
+            @for (step of flowSteps; track step.label; let last = $last) {
+              <div class="flow-step">
+                <div class="flow-icon" [style.background]="step.color">
+                  <mat-icon>{{ step.icon }}</mat-icon>
+                </div>
+                <span class="flow-label">{{ step.label }}</span>
+              </div>
+              @if (!last) {
+                <mat-icon class="flow-arrow">arrow_forward</mat-icon>
+              }
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </main>
+  </div>
+</div>

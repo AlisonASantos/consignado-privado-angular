@@ -1,0 +1,84 @@
+<div class="page-layout">
+  <mat-toolbar class="toolbar" color="primary">
+    <button mat-icon-button (click)="goBack()"><mat-icon>arrow_back</mat-icon></button>
+    <mat-icon class="toolbar-logo">account_balance</mat-icon>
+    <span>Convênios</span>
+  </mat-toolbar>
+
+  <div class="page-content">
+    <div class="header-row">
+      <div>
+        <h2>Convênios Empresariais</h2>
+        <p class="subtitle">Gerencie os convênios com empresas parceiras</p>
+      </div>
+      <button mat-raised-button color="primary"><mat-icon>add</mat-icon> Novo Convênio</button>
+    </div>
+
+    <div class="agreements-grid">
+      @for (a of state.agreements; track a.cnpj) {
+        <mat-card class="agreement-card" (click)="selectAgreement(a)">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="company-icon">business</mat-icon>
+            <mat-card-title>{{ a.company }}</mat-card-title>
+            <mat-card-subtitle>CNPJ: {{ a.cnpj }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="agreement-stats">
+              <div class="stat">
+                <mat-icon>people</mat-icon>
+                <span>{{ a.employeeCount }} funcionários</span>
+              </div>
+              <div class="stat">
+                <mat-icon>percent</mat-icon>
+                <span>Taxa máx: {{ a.maxRate }}%</span>
+              </div>
+              <div class="stat">
+                <mat-icon>calendar_month</mat-icon>
+                <span>Até {{ a.maxInstallments }}x</span>
+              </div>
+              <div class="stat">
+                <mat-icon>account_balance_wallet</mat-icon>
+                <span>{{ a.marginPolicy }}</span>
+              </div>
+            </div>
+            <div class="agreement-footer">
+              <span class="status-badge" [class.active]="a.status === 'Ativo'" [class.pending]="a.status === 'Pendente'">{{ a.status }}</span>
+              <span class="contracts-info">{{ a.totalContracts }} contratos • {{ formatCurrency(a.totalVolume) }}</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+
+    @if (selectedAgreement) {
+      <div class="overlay" (click)="closeDetail()">
+        <mat-card class="detail-dialog" (click)="$event.stopPropagation()">
+          <mat-card-header>
+            <mat-card-title>{{ selectedAgreement.company }}</mat-card-title>
+            <mat-card-subtitle>{{ selectedAgreement.cnpj }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="detail-section">
+              <h4>Detalhes do Convênio</h4>
+              <div class="info-row"><span>Funcionários:</span><strong>{{ selectedAgreement.employeeCount }}</strong></div>
+              <div class="info-row"><span>Taxa Máxima:</span><strong>{{ selectedAgreement.maxRate }}% a.m.</strong></div>
+              <div class="info-row"><span>Parcelas Máx:</span><strong>{{ selectedAgreement.maxInstallments }}x</strong></div>
+              <div class="info-row"><span>Política de Margem:</span><strong>{{ selectedAgreement.marginPolicy }}</strong></div>
+              <div class="info-row"><span>Total Contratos:</span><strong>{{ selectedAgreement.totalContracts }}</strong></div>
+              <div class="info-row"><span>Volume Total:</span><strong>{{ formatCurrency(selectedAgreement.totalVolume) }}</strong></div>
+            </div>
+            <div class="detail-section">
+              <h4>Integrações Ativas</h4>
+              <mat-list>
+                <mat-list-item><mat-icon matListItemIcon class="integration-icon">api</mat-icon><span matListItemTitle>API de Folha</span></mat-list-item>
+                <mat-list-item><mat-icon matListItemIcon class="integration-icon">computer</mat-icon><span matListItemTitle>Sistema RH/ERP</span></mat-list-item>
+                <mat-list-item><mat-icon matListItemIcon class="integration-icon">cloud</mat-icon><span matListItemTitle>Consulta de Margem Online</span></mat-list-item>
+              </mat-list>
+            </div>
+            <button mat-stroked-button (click)="closeDetail()">Fechar</button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    }
+  </div>
+</div>

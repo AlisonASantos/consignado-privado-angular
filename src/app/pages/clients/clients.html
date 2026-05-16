@@ -1,0 +1,95 @@
+<div class="page-layout">
+  <mat-toolbar class="toolbar" color="primary">
+    <button mat-icon-button (click)="goBack()"><mat-icon>arrow_back</mat-icon></button>
+    <mat-icon class="toolbar-logo">account_balance</mat-icon>
+    <span>Clientes</span>
+  </mat-toolbar>
+
+  <div class="page-content">
+    <div class="header-row">
+      <div>
+        <h2>Gestão de Clientes</h2>
+        <p class="subtitle">Consulte e gerencie os clientes da plataforma</p>
+      </div>
+      <button mat-raised-button color="primary" (click)="showNewClientForm = !showNewClientForm">
+        <mat-icon>person_add</mat-icon> Novo Cliente
+      </button>
+    </div>
+
+    @if (showNewClientForm) {
+      <mat-card class="new-client-card">
+        <mat-card-header><mat-card-title>Novo Cliente</mat-card-title></mat-card-header>
+        <mat-card-content>
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Nome</mat-label>
+              <input matInput [(ngModel)]="newClient.name">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>CPF</mat-label>
+              <input matInput [(ngModel)]="newClient.cpf">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>E-mail</mat-label>
+              <input matInput [(ngModel)]="newClient.email">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Telefone</mat-label>
+              <input matInput [(ngModel)]="newClient.phone">
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar por nome ou CPF</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="searchQuery" placeholder="Digite nome ou CPF...">
+    </mat-form-field>
+
+    <div class="clients-grid">
+      <mat-card class="clients-list">
+        <mat-list>
+          @for (c of filteredClients; track c.cpf) {
+            <mat-list-item class="client-item" (click)="selectClient(c)">
+              <mat-icon matListItemIcon class="client-icon">person</mat-icon>
+              <div matListItemTitle><strong>{{ c.name }}</strong></div>
+              <div matListItemLine>{{ c.cpf }} • {{ c.company }}</div>
+              <div class="client-meta">
+                <span class="margin-badge">Margem: {{ formatCurrency(c.availableMargin) }}</span>
+                <span class="status-badge" [class.active]="c.status === 'Ativo'" [class.blocked]="c.status === 'Bloqueado'">{{ c.status }}</span>
+              </div>
+            </mat-list-item>
+          }
+        </mat-list>
+      </mat-card>
+
+      @if (selectedClient) {
+        <mat-card class="client-detail">
+          <mat-card-header>
+            <mat-card-title>{{ selectedClient.name }}</mat-card-title>
+            <mat-card-subtitle>{{ selectedClient.cpf }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="detail-section">
+              <h4>Informações Pessoais</h4>
+              <div class="info-row"><span>E-mail:</span><strong>{{ selectedClient.email }}</strong></div>
+              <div class="info-row"><span>Telefone:</span><strong>{{ selectedClient.phone }}</strong></div>
+              <div class="info-row"><span>Empresa:</span><strong>{{ selectedClient.company }}</strong></div>
+              <div class="info-row"><span>Status:</span><strong>{{ selectedClient.status }}</strong></div>
+            </div>
+            <div class="detail-section">
+              <h4>Dados Complementares</h4>
+              <div class="info-row"><span>Margem Disponível:</span><strong>{{ formatCurrency(selectedClient.availableMargin) }}</strong></div>
+              <div class="info-row"><span>Propostas:</span><strong>{{ selectedClient.proposalCount }}</strong></div>
+              <div class="info-row"><span>Consentimento LGPD:</span><strong class="lgpd-ok">Concedido</strong></div>
+              <div class="info-row"><span>Documentos:</span><strong class="lgpd-ok">Validados</strong></div>
+            </div>
+            <button mat-stroked-button (click)="closeDetail()">Fechar</button>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  </div>
+</div>

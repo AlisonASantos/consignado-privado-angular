@@ -1,0 +1,133 @@
+<div class="page-layout">
+  <mat-toolbar class="toolbar" color="primary">
+    <button mat-icon-button (click)="goBack()"><mat-icon>arrow_back</mat-icon></button>
+    <mat-icon class="toolbar-logo">account_balance</mat-icon>
+    <span>Detalhe da Proposta</span>
+  </mat-toolbar>
+
+  <div class="page-content">
+    <h2>Fluxo da Proposta</h2>
+    <p class="subtitle">PROP-2024-008 • Acompanhe cada etapa do processo</p>
+
+    <mat-stepper [selectedIndex]="currentStep" orientation="vertical" class="proposal-stepper">
+      <!-- Step 1: Proposta Criada -->
+      <mat-step [completed]="steps[0].completed" label="Proposta Criada">
+        <mat-card class="step-card">
+          <mat-card-content>
+            <div class="step-info">
+              <div class="info-row"><span>ID:</span><strong>PROP-2024-008</strong></div>
+              <div class="info-row"><span>Cliente:</span><strong>Novo Cliente</strong></div>
+              <div class="info-row"><span>Valor:</span><strong>R$ 10.000,00</strong></div>
+              <div class="info-row"><span>Parcelas:</span><strong>24x</strong></div>
+              <div class="info-row"><span>Status:</span><strong class="status-created">Proposta Criada</strong></div>
+            </div>
+            <button mat-raised-button color="primary" (click)="processStep(1)" [disabled]="isProcessing">
+              @if (isProcessing) { <mat-spinner diameter="20"></mat-spinner> } @else { Avançar para Análise }
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </mat-step>
+
+      <!-- Step 2: Análise de Crédito -->
+      <mat-step [completed]="steps[1].completed" label="Análise de Crédito">
+        <mat-card class="step-card">
+          <mat-card-content>
+            <p class="step-desc">Consulta automática aos bureaus de crédito (Serasa, Boa Vista, Quod).</p>
+            @if (!creditApproved) {
+              <button mat-raised-button color="primary" (click)="processStep(1)" [disabled]="isProcessing">
+                @if (isProcessing) { <mat-spinner diameter="20"></mat-spinner> } @else { <mat-icon>search</mat-icon> Iniciar Análise }
+              </button>
+            } @else {
+              <div class="approval-box">
+                <mat-icon>verified</mat-icon>
+                <div>
+                  <strong>Crédito Aprovado</strong><br>
+                  <span>Score: 785 • Risco: Baixo • Bureau: Serasa</span>
+                </div>
+              </div>
+              <button mat-raised-button color="primary" (click)="processStep(2)" [disabled]="isProcessing">
+                @if (isProcessing) { <mat-spinner diameter="20"></mat-spinner> } @else { Avançar para Formalização }
+              </button>
+            }
+          </mat-card-content>
+        </mat-card>
+      </mat-step>
+
+      <!-- Step 3: Formalização -->
+      <mat-step [completed]="steps[2].completed" label="Formalização Digital">
+        <mat-card class="step-card">
+          <mat-card-content>
+            <mat-list>
+              @for (check of formalizationChecks; track check.label) {
+                <mat-list-item>
+                  <mat-checkbox [checked]="check.checked" [disabled]="true">{{ check.label }}</mat-checkbox>
+                </mat-list-item>
+              }
+            </mat-list>
+            @if (!contractSigned) {
+              <button mat-raised-button color="primary" (click)="processStep(2)" [disabled]="isProcessing">
+                @if (isProcessing) { <mat-spinner diameter="20"></mat-spinner> } @else { <mat-icon>draw</mat-icon> Assinar Contrato }
+              </button>
+            } @else {
+              <div class="approval-box">
+                <mat-icon>task_alt</mat-icon>
+                <div><strong>Contrato assinado digitalmente</strong><br><span>Certificado ICP-Brasil válido</span></div>
+              </div>
+              <button mat-raised-button color="primary" (click)="processStep(3)" [disabled]="isProcessing">
+                @if (isProcessing) { <mat-spinner diameter="20"></mat-spinner> } @else { Avançar para Averbação }
+              </button>
+            }
+          </mat-card-content>
+        </mat-card>
+      </mat-step>
+
+      <!-- Step 4: Averbação -->
+      <mat-step [completed]="steps[3].completed" label="Averbação">
+        <mat-card class="step-card">
+          <mat-card-content>
+            <p class="step-desc">Registro da operação na folha de pagamento da empresa conveniada.</p>
+            @if (!payrollRegistered) {
+              <button mat-raised-button color="primary" (click)="processStep(3)" [disabled]="isProcessing">
+                @if (isProcessing) { <mat-spinner diameter="20"></mat-spinner> } @else { <mat-icon>assignment_turned_in</mat-icon> Registrar Averbação }
+              </button>
+            } @else {
+              <div class="approval-box">
+                <mat-icon>check_circle</mat-icon>
+                <div><strong>Averbação registrada</strong><br><span>Margem consumida: R$ 522,15 • Empresa: TechCorp Brasil LTDA</span></div>
+              </div>
+              <button mat-raised-button color="primary" (click)="processStep(4)" [disabled]="isProcessing">
+                @if (isProcessing) { <mat-spinner diameter="20"></mat-spinner> } @else { Avançar para Liberação }
+              </button>
+            }
+          </mat-card-content>
+        </mat-card>
+      </mat-step>
+
+      <!-- Step 5: Liberação -->
+      <mat-step [completed]="steps[4].completed" label="Liberação de Crédito">
+        <mat-card class="step-card">
+          <mat-card-content>
+            @if (!disbursed) {
+              <p class="step-desc">Transferência via PIX para a conta do cliente.</p>
+              <div class="info-row"><span>Banco:</span><strong>Banco do Brasil</strong></div>
+              <div class="info-row"><span>Agência:</span><strong>1234</strong></div>
+              <div class="info-row"><span>Conta:</span><strong>56789-0</strong></div>
+              <div class="info-row"><span>Chave PIX:</span><strong>123.456.789-00</strong></div>
+              <button mat-raised-button color="accent" (click)="processStep(4)" [disabled]="isProcessing" class="pix-button">
+                @if (isProcessing) { <mat-spinner diameter="20"></mat-spinner> } @else { <mat-icon>pix</mat-icon> Liberar Crédito via PIX }
+              </button>
+            } @else {
+              <div class="celebration">
+                <mat-icon class="celebration-icon">celebration</mat-icon>
+                <h3>Crédito Liberado com Sucesso!</h3>
+                <p>O valor de R$ 10.000,00 foi transferido via PIX.</p>
+                <p class="event-tag">Evento: LoanDisbursed</p>
+                <button mat-raised-button (click)="goBack()">Voltar ao Dashboard</button>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      </mat-step>
+    </mat-stepper>
+  </div>
+</div>

@@ -1,0 +1,111 @@
+<div class="page-layout">
+  <mat-toolbar class="toolbar" color="primary">
+    <button mat-icon-button (click)="goBack()"><mat-icon>arrow_back</mat-icon></button>
+    <mat-icon class="toolbar-logo">account_balance</mat-icon>
+    <span>Consignado Privado</span>
+  </mat-toolbar>
+
+  <div class="page-content">
+    <h2>Simulação de Crédito</h2>
+    <p class="subtitle">Simule operações de crédito consignado</p>
+
+    <div class="sim-grid">
+      <mat-card class="form-card">
+        <mat-card-header><mat-card-title>Dados da Simulação</mat-card-title></mat-card-header>
+        <mat-card-content>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>CPF do Cliente</mat-label>
+            <mat-icon matPrefix>badge</mat-icon>
+            <input matInput [(ngModel)]="cpf" placeholder="000.000.000-00">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nome do Cliente</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input matInput [(ngModel)]="clientName">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Empresa Conveniada</mat-label>
+            <mat-icon matPrefix>business</mat-icon>
+            <mat-select [(ngModel)]="company">
+              @for (c of companies; track c) {
+                <mat-option [value]="c">{{ c }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <div class="slider-group">
+            <label>Valor do Empréstimo: {{ formatCurrency(amount) }}</label>
+            <mat-slider min="1000" max="100000" step="1000" class="full-width">
+              <input matSliderThumb [(ngModel)]="amount">
+            </mat-slider>
+            <div class="slider-range"><span>R$ 1.000</span><span>R$ 100.000</span></div>
+          </div>
+
+          <div class="slider-group">
+            <label>Parcelas: {{ installments }} meses</label>
+            <mat-slider min="6" max="84" step="1" class="full-width">
+              <input matSliderThumb [(ngModel)]="installments">
+            </mat-slider>
+            <div class="slider-range"><span>6 meses</span><span>84 meses</span></div>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Tabela de Cálculo</mat-label>
+            <mat-icon matPrefix>grid_on</mat-icon>
+            <mat-select [(ngModel)]="calcMethod">
+              <mat-option value="PRICE">Tabela PRICE</mat-option>
+              <mat-option value="SAC">Tabela SAC</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" class="sim-button" (click)="simulate()" [disabled]="isSimulating">
+            @if (isSimulating) {
+              <mat-spinner diameter="24"></mat-spinner>
+            } @else {
+              <mat-icon>calculate</mat-icon> Simular
+            }
+          </button>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="result-card">
+        @if (result) {
+          <mat-card-header>
+            <mat-icon class="result-icon" color="primary">check_circle</mat-icon>
+            <mat-card-title>Resultado da Simulação</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="result-rows">
+              <div class="result-row"><span>Valor Solicitado</span><strong>{{ formatCurrency(result.amount) }}</strong></div>
+              <div class="result-row"><span>Parcelas</span><strong>{{ result.installments }}x</strong></div>
+              <div class="result-row"><span>Valor da Parcela</span><strong>{{ formatCurrency(result.monthlyPayment) }}</strong></div>
+              <div class="result-row"><span>Taxa de Juros</span><strong>{{ result.interestRate }}% a.m.</strong></div>
+              <div class="result-row"><span>CET</span><strong>{{ result.cet }}% a.m.</strong></div>
+              <div class="result-row"><span>IOF</span><strong>{{ formatCurrency(result.iof) }}</strong></div>
+              <div class="result-row total"><span>Total a Pagar</span><strong>{{ formatCurrency(result.totalAmount) }}</strong></div>
+            </div>
+
+            <div class="eligibility-box">
+              <mat-icon>check_circle</mat-icon>
+              <div>
+                <strong>Elegível para contratação.</strong><br>
+                Margem disponível: R$ 1.200,00
+              </div>
+            </div>
+
+            <button mat-raised-button color="accent" class="generate-button" (click)="generateProposal()">
+              <mat-icon>send</mat-icon> Gerar Proposta
+            </button>
+          </mat-card-content>
+        } @else {
+          <div class="placeholder">
+            <mat-icon>calculate</mat-icon>
+            <p>Preencha os dados e clique em Simular para ver o resultado</p>
+          </div>
+        }
+      </mat-card>
+    </div>
+  </div>
+</div>

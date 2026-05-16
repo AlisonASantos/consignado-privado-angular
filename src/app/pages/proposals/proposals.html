@@ -1,0 +1,41 @@
+<div class="page-layout">
+  <mat-toolbar class="toolbar" color="primary">
+    <button mat-icon-button (click)="goBack()"><mat-icon>arrow_back</mat-icon></button>
+    <mat-icon class="toolbar-logo">account_balance</mat-icon>
+    <span>Propostas</span>
+  </mat-toolbar>
+
+  <div class="page-content">
+    <h2>Gestão de Propostas</h2>
+    <p class="subtitle">Acompanhe todas as propostas de crédito consignado</p>
+
+    <div class="filters">
+      @for (f of filters; track f) {
+        <button mat-stroked-button [class.active]="selectedFilter === f" (click)="selectFilter(f)">{{ f }}</button>
+      }
+    </div>
+
+    <mat-card>
+      <mat-list>
+        @for (p of filteredProposals; track p.id) {
+          <mat-list-item class="proposal-item" (click)="viewDetail()">
+            <mat-icon matListItemIcon class="proposal-icon">description</mat-icon>
+            <div matListItemTitle class="proposal-title">
+              <strong>{{ p.id }}</strong> — {{ p.clientName }}
+            </div>
+            <div matListItemLine class="proposal-line">
+              {{ p.company }} • {{ formatCurrency(p.amount) }} • {{ p.installments }}x de {{ formatCurrency(p.monthlyPayment) }} • {{ formatDate(p.createdAt) }}
+            </div>
+            <span class="status-chip" [style.background]="getStatusColor(p.status)">{{ p.status }}</span>
+          </mat-list-item>
+        }
+        @if (filteredProposals.length === 0) {
+          <div class="empty-state">
+            <mat-icon>search_off</mat-icon>
+            <p>Nenhuma proposta encontrada para este filtro.</p>
+          </div>
+        }
+      </mat-list>
+    </mat-card>
+  </div>
+</div>
