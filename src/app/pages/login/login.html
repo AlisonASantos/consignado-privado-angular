@@ -4,37 +4,73 @@
       <div class="logo-circle">
         <mat-icon class="logo-icon">account_balance</mat-icon>
       </div>
+
       <h1>Consignado Privado</h1>
       <p>Plataforma de Gestão de Crédito</p>
     </div>
 
     <mat-card-content>
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>E-mail</mat-label>
-        <mat-icon matPrefix>email</mat-icon>
-        <input matInput type="email" [(ngModel)]="email" placeholder="seu@email.com">
-      </mat-form-field>
+      <form #loginForm="ngForm" (ngSubmit)="login()" novalidate>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>E-mail</mat-label>
+          <mat-icon matPrefix>email</mat-icon>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Senha</mat-label>
-        <mat-icon matPrefix>lock</mat-icon>
-        <input matInput [type]="hidePassword ? 'password' : 'text'" [(ngModel)]="password">
-        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
-          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          <input
+            matInput
+            type="email"
+            name="email"
+            [(ngModel)]="email"
+            placeholder="seu@email.com"
+            required
+            email
+            autocomplete="email"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Senha</mat-label>
+          <mat-icon matPrefix>lock</mat-icon>
+
+          <input
+            matInput
+            [type]="hidePassword ? 'password' : 'text'"
+            name="password"
+            [(ngModel)]="password"
+            required
+            autocomplete="current-password"
+          />
+
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            aria-label="Mostrar ou ocultar senha"
+            (click)="hidePassword = !hidePassword"
+          >
+            <mat-icon>
+              {{ hidePassword ? 'visibility_off' : 'visibility' }}
+            </mat-icon>
+          </button>
+        </mat-form-field>
+
+        <div class="forgot-password">
+          <a href="#" (click)="$event.preventDefault()">Esqueceu a senha?</a>
+        </div>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="login-button"
+          [disabled]="loginForm.invalid || isLoading"
+        >
+          @if (isLoading) {
+            <mat-spinner diameter="24" color="accent"></mat-spinner>
+          } @else {
+            Entrar
+          }
         </button>
-      </mat-form-field>
-
-      <div class="forgot-password">
-        <a href="javascript:void(0)">Esqueceu a senha?</a>
-      </div>
-
-      <button mat-raised-button color="primary" class="login-button" (click)="login()" [disabled]="isLoading">
-        @if (isLoading) {
-          <mat-spinner diameter="24" color="accent"></mat-spinner>
-        } @else {
-          Entrar
-        }
-      </button>
+      </form>
 
       <div class="security-info">
         <mat-icon>verified_user</mat-icon>
